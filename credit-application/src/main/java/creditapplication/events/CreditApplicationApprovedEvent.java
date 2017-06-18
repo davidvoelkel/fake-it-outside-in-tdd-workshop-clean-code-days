@@ -6,42 +6,31 @@ import java.math.BigDecimal;
 
 public class CreditApplicationApprovedEvent {
 
-    private int term;
-
-    private BigDecimal amount;
-
-    private BigDecimal percentage;
-
-    String customerId;
-
-    String creditApplicationId;
+    private CreditApplicationForm creditApplicationForm;
 
 
     public CreditApplicationApprovedEvent(CreditApplicationForm creditApplicationForm) {
-        this.term = creditApplicationForm.getTerm();
-        this.amount = creditApplicationForm.getAmount();
-        this.percentage = creditApplicationForm.getPercentage();
-        this.customerId = creditApplicationForm.getCustomerId().toString();
-        this.creditApplicationId = creditApplicationForm.getId().toString();
+
+        this.creditApplicationForm = creditApplicationForm;
     }
 
     public int getTerm() {
-        return term;
+        return creditApplicationForm.getTerm();
     }
 
     public BigDecimal getAmount() {
-        return amount;
+        return creditApplicationForm.getAmount();
     }
 
     public BigDecimal getPercentage() {
-        return percentage;
+        return creditApplicationForm.getPercentage();
     }
 
     public String getCustomerId() {
-        return customerId;
+        return creditApplicationForm.getCustomerId().toString();
     }
 
     public String getCreditApplicationId() {
-        return creditApplicationId;
+        return creditApplicationForm.getId().toString();
     }
 }

@@ -43,16 +43,26 @@ public class CreditApplicationController {
         LOGGER.info("Remotely and synchronously calling the Scoring Application in order to perform a scoring");
         ScoringResult scoringResult = scoringService.performScoring(scoringInput);
 
-        if(scoringResult.getScoringColor().equals(ScoringColor.GREEN)) {
-            LOGGER.info("Scoring was green, sending CreditApplicationApprovedEvent");
-            creditEventQueue.send(new CreditApplicationApprovedEvent(creditApplicationForm));
-        } else {
-            LOGGER.info("Scoring was NOT green, sending CreditApplicationDeclinedEvent");
-            creditEventQueue.send(new CreditApplicationDeclinedEvent(creditApplicationForm));
-        }
+        Object event = calculateResultingEvent(creditApplicationForm, scoringResult.getScoringColor());
+
+        creditEventQueue.send(event);
 
         model.addAttribute("scoringResult", scoringResult);
 
         return "scoringResult";
+    }
+
+    Object calculateResultingEvent(CreditApplicationForm creditApplicationForm, ScoringColor scoringColor) {
+
+        boolean scoreGreen = scoringColor.equals(ScoringColor.GREEN);
+
+        Object event = scoreGreen ? new CreditApplicationApprovedEvent(creditApplicationForm) :
+                                    new CreditApplicationDeclinedEvent(creditApplicationForm);
+
+        String color = scoreGreen ? "green" :
+                                    "NOT green";
+        LOGGER.info("Scoring was " + color + ", " +
+                    "sending " + event.getClass().getSimpleName());
+        return event;
     }
 }

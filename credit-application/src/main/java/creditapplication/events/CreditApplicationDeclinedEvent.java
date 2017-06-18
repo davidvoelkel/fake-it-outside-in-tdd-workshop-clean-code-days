@@ -13,28 +13,26 @@ public class CreditApplicationDeclinedEvent {
     String customerId;
 
     String creditApplicationId;
+    private CreditApplicationForm creditApplicationForm;
 
 
     public CreditApplicationDeclinedEvent(CreditApplicationForm creditApplicationForm) {
-        this.term = creditApplicationForm.getTerm();
-        this.amount = creditApplicationForm.getAmount();
-        this.customerId = creditApplicationForm.getCustomerId().toString();
-        this.creditApplicationId = creditApplicationForm.getId().toString();
+        this.creditApplicationForm = creditApplicationForm;
     }
 
     public int getTerm() {
-        return term;
+        return creditApplicationForm.getTerm();
     }
 
     public BigDecimal getAmount() {
-        return amount;
+        return creditApplicationForm.getAmount();
     }
 
     public String getCustomerId() {
-        return customerId;
+        return creditApplicationForm.getCustomerId().toString();
     }
 
     public String getCreditApplicationId() {
-        return creditApplicationId;
+        return creditApplicationForm.getId().toString();
     }
 }

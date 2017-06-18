@@ -4,11 +4,11 @@ import creditapplication.domain.CreditApplicationForm;
 import creditapplication.events.CreditApplicationApprovedEvent;
 import creditapplication.events.CreditApplicationDeclinedEvent;
 import creditapplication.repository.CreditApplicationFormRepository;
+import org.assertj.core.api.Assertions;
 import org.junit.Before;
 import org.junit.Test;
-import org.mockito.MockSettings;
-import org.mockito.Mockito;
 
+import static org.assertj.core.api.Assertions.assertThat;
 import static org.mockito.Matchers.any;
 import static org.mockito.Matchers.anyLong;
 import static org.mockito.Mockito.*;
@@ -28,7 +28,7 @@ public class CreditApplicationControllerTest {
         controller = new CreditApplicationController(repo, scoringService, eventQueue);
     }
 
-    // ************************* Mocking ****************************
+    // ************************* Test with Mocking ****************************
 
     @Test
     public void applicationDeclined_whenScoringIsRed() throws Exception {
@@ -54,5 +54,21 @@ public class CreditApplicationControllerTest {
         verify(eventQueue).send(any(CreditApplicationApprovedEvent.class));
     }
 
-    // ************************* Mocking ****************************
+    // ************************* Test pure "Operation" method ****************************
+    @Test
+    public void applicationApprovedEvent_whenScoringIsGreen() throws Exception {
+
+        Object event = controller.calculateResultingEvent(null, ScoringColor.GREEN);
+
+        assertThat(event).isInstanceOf(CreditApplicationApprovedEvent.class);
+    }
+
+    @Test
+    public void applicationDeclinedEvent_whenScoringIsRed() throws Exception {
+
+        Object event = controller.calculateResultingEvent(null, ScoringColor.RED);
+
+        assertThat(event).isInstanceOf(CreditApplicationDeclinedEvent.class);
+    }
+
 }
